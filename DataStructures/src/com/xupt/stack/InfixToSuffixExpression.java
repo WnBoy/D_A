@@ -8,7 +8,7 @@ import java.util.Stack;
  * @author Wnlife
  * @create 2019-10-27 21:05
  * <p>
- * 中缀表达式 -> 后缀表达式
+ * 中缀表达式 -> 后缀表达式（逆波兰表达式）
  */
 public class InfixToSuffixExpression {
 
