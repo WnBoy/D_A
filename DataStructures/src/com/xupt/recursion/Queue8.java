@@ -58,6 +58,7 @@ public class Queue8 {
      * @return 是否冲突
      */
     private boolean judge(int n) {
+
         judgeCount++;
         for (int i = 0; i < n; i++) {
             if (array[i] == array[n] || Math.abs(n - i) == Math.abs(array[n] - array[i]))
