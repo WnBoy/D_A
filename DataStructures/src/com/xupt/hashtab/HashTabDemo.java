@@ -24,9 +24,9 @@ public class HashTabDemo {
             key = in.next();
             switch (key) {
                 case "add": {
-                    System.out.println("请输入雇员的ID");
+                    System.out.println("请输入雇员的ID:");
                     int id = in.nextInt();
-                    System.out.println("请输入雇员的姓名");
+                    System.out.println("请输入雇员的姓名:");
                     String name = in.next();
                     //创建雇员
                     Employee employee = new Employee(id, name);
