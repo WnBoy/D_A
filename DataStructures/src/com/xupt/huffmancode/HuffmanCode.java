@@ -12,12 +12,12 @@ import java.util.*;
 public class HuffmanCode {
 
     public static void main(String[] args) {
-       /* String content = "i like like like java do you like a java";
+        String content = "i like like like java do you like a java";
         System.out.println("要编码的字符串为：" + content);
         byte[] bytes = content.getBytes();
         System.out.println("要编码的字节数组：" + Arrays.toString(bytes) + "长度为：" + bytes.length);
 
-        List<Node> nodes = getNodes(bytes);//生成对应 的节点集合
+        /*List<Node> nodes = getNodes(bytes);//生成对应 的节点集合
         System.out.println("生成的节点集合:" + nodes);
         Node root = createHuffmanTree(nodes);//生成赫夫曼树
         System.out.println("前序遍历：");
@@ -25,13 +25,13 @@ public class HuffmanCode {
         getCodes(root);//获取编码
         System.out.println(huffmanCodes);
         byte[] huffmanCodeBytes = zip(bytes, huffmanCodes);//生成编码后的字节数组
-        System.out.println("编码后的字节数组："+Arrays.toString(huffmanCodeBytes));
+        System.out.println("编码后的字节数组："+Arrays.toString(huffmanCodeBytes));*/
 
         byte[] huffmanCodeBytes = huffmanZip(bytes);
         System.out.println("压缩后的字节数组：" + Arrays.toString(huffmanCodeBytes) + "长度为：" + huffmanCodeBytes.length);
 
         byte[] decodeBytes = decode(huffmanCodes, huffmanCodeBytes);
-        System.out.println("解码后的数据为:" + new String(decodeBytes));*/
+        System.out.println("解码后的数据为:" + new String(decodeBytes));
 
 
         //文件压缩测试
@@ -39,8 +39,8 @@ public class HuffmanCode {
 //        System.out.println("压缩文件完成~~");
 
         //文件解压测试
-        unZipFile("E:\\1.zip","E:\\1.bmp");
-        System.out.println("解压文件完成~~");
+//        unZipFile("E:\\1.zip","E:\\1.bmp");
+//        System.out.println("解压文件完成~~");
 
     }
 
@@ -48,6 +48,7 @@ public class HuffmanCode {
     /************************************************************文件压缩与解压**********************************************************/
     /**
      * 编写一个方法，完成对压缩文件的解压
+     *
      * @param zipFile 要解压的文件的路径
      * @param dstFile 解压后的文件存放路径
      */
@@ -123,7 +124,7 @@ public class HuffmanCode {
      * 思路：
      * 1. 将huffmanCodeBytes [-88, -65, -56, -65, -56, -65, -55, 77, -57, 6, -24, -14, -117, -4, -60, -90, 28]
      * 重写先转成 赫夫曼编码对应的二进制的字符串 "1010100010111..."
-     * 2.  赫夫曼编码对应的二进制的字符串 "1010100010111..." =》 对照 赫夫曼编码  =》 "i like like like java do you like a java"
+     * 2.  赫夫曼编码对应的二进制的字符串 "1010100010111..." -> 对照 赫夫曼编码  -> "i like like like java do you like a java"
      *
      * @param huffmanCodes 赫夫曼编码表
      * @param huffmanBytes 赫夫曼编码后的字节数组
@@ -173,14 +174,22 @@ public class HuffmanCode {
     /**
      * 将一个byte转成其对应的二进制的字符串
      *
-     * @param flag 标志是否需要补高位如果是true ，表示需要补高位，如果是false表示不补, 如果是最后一个字节，无需补高位
+     * @param flag 标志是否需要补高位，如果是true表示需要补高位，如果是false表示不补,
+     *             如果是最后一个字节，无需补高位(原因：因为最后一个字节对应编码后的二进制字符串的最后一段，
+     *             不一定长度为8，用256补完高位，这个字节对应的字符串长度会变为变成8，这是要不得的)
      * @param b    传入的byte
      * @return 是传入的b对应的二进制字符串(注意是按照补码返回)
      */
     public static String byteToBitString(boolean flag, byte b) {
         //将b转成int类型
         int temp = b;
-        //如果是正数，需要补高位
+        /**
+         * 如果是正数，需要补高位
+         * 原因：如果是正数，使用Integer.toBinaryString()方法得到的是无前导0的二进制字符串
+         * 得到的字符串可能长度小于8，而在编码是长度小于8的是以0占据的，所以此处使用temp |= 256，
+         * temp | 1 0000 0000,将temp的高位补满0，在最后转换成字符串时，只截取8位，
+         * 因为我们在编码过程中，一直是用  byte=“8位二进制字符串”  一一对应的。
+         */
         if (flag) {
             temp |= 256;
         }
@@ -214,9 +223,9 @@ public class HuffmanCode {
     /**
      * 根据所生成的哈夫曼编码表，对传入的字节数组进行编码，返回编码后的字节数组
      *
-     * @param bytes        要编码的字节数组
-     *                     [105, 32, 108, 105, 107, 101, 32, 108, 105, 107, 101, 32, 108, 105, 107, 101, 32, 106, 97,
-     *                     118, 97, 32, 100, 111, 32, 121, 111, 117, 32, 108, 105, 107, 101, 32, 97, 32, 106, 97, 118, 97]
+     * @param bytes 要编码的字节数组
+     *   [105, 32, 108, 105, 107, 101, 32, 108, 105, 107, 101, 32, 108, 105, 107, 101, 32, 106, 97,
+     *   118, 97, 32, 100, 111, 32, 121, 111, 117, 32, 108, 105, 107, 101, 32, 97, 32, 106, 97, 118, 97]
      * @param huffmanCodes 赫夫曼编码表
      * @return 编码后的字节数组
      * [-88, -65, -56, -65, -56, -65, -55, 77, -57, 6, -24, -14, -117, -4, -60, -90, 28]
@@ -230,13 +239,11 @@ public class HuffmanCode {
             sb.append(huffmanCodes.get(b));
         }
 //        System.out.println(sb.toString());
-
         /**
          * 将编码后的二进制字符串每8位变为一个字节(byte)，放入到一个字节数组中huffmanCodeBytes
-         * 例子：
-         * 前8位：10101000(补码)->10101000 - 1 =10100111(反码)->11011000=-88
+         * 例子：前8位：10101000(补码)->10101000 - 1 =10100111(反码)->11011000=-88
          */
-        //计算最后生成的字节数组的长度
+        //计算最后生成的字节数组的长度: lem=(sb.length()+7)/8;
         int len;
         if (sb.length() % 8 == 0) {
             len = sb.length() / 8;
@@ -253,7 +260,15 @@ public class HuffmanCode {
             } else {
                 strByte = sb.substring(i, i + 8);
             }
-            //将strByte转成一个byte，放入到huffmanCodeBytes中
+            /**
+             *  将strByte转成一个byte，即每8个切割后的二进制字符串转成一个byte，放入到huffmanCodeBytes中
+             *  计算机存储的都是补码，现在想得到10101000对应的byte，即对应的原码。
+             *  使用Integer类中的parseInt(String s, int radix)方法转换，
+             *  但是使用这个方法将8位的二进制字符串转换时，8位的二进制字符串是当做32位进行转换的，高位用0补齐，
+             *  这就导致原本8位二进制字符串“10101000”最高位的1不再表示符号位，而32位的最开头补上的0才是符号位，
+             *  这样转换后得到的int类型不是我们对应的byte类型，但是转换后的int类型的后八位和我们需要的byte类型的后8位是一样的，
+             *  所以，可以直接使用类型转换截取后8位，得到我们想要的byte类型，即“10101000”对应的byte。
+             */
             huffmanCodeBytes[index++] = (byte) Integer.parseInt(strByte, 2);
         }
         return huffmanCodeBytes;
@@ -316,8 +331,8 @@ public class HuffmanCode {
     /**
      * 可以通过List创建对应的赫夫曼树
      *
-     * @param nodes
-     * @return
+     * @param nodes 节点集合
+     * @return 返回赫夫曼树的根节点
      */
     public static Node createHuffmanTree(List<Node> nodes) {
         while (nodes.size() > 1) {
