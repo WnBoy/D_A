@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class HuffmanCode {
 
+    @SuppressWarnings("AlibabaRemoveCommentedCode")
     public static void main(String[] args) {
         String content = "i like like like java do you like a java";
         System.out.println("要编码的字符串为：" + content);
@@ -230,6 +231,7 @@ public class HuffmanCode {
      * @return 编码后的字节数组
      * [-88, -65, -56, -65, -56, -65, -55, 77, -57, 6, -24, -14, -117, -4, -60, -90, 28]
      */
+    @SuppressWarnings("AlibabaRemoveCommentedCode")
     public static byte[] zip(byte[] bytes, Map<Byte, String> huffmanCodes) {
         StringBuilder sb = new StringBuilder();
         //根据编码表对传入的字节数组进行编码，生成一个编码后的字符串
