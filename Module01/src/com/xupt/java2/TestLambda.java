@@ -18,6 +18,8 @@ public class TestLambda {
 
     public void test2(){
 
+//        Collections.sort();
+
         System.out.println("测试用例2");
 
     }
